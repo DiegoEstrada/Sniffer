@@ -12,8 +12,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapAddr;
@@ -33,13 +31,14 @@ public class GenerarTramas extends javax.swing.JFrame {
     private int nsecuencia;
     private int nacuse;
     private final int contienenombre; //Nunca enviaremos tramas a partir de un archivo
+    private DefaultListModel listaJList;
    
     public GenerarTramas() {
         initComponents();
         this.nsecuencia = 0;
         this.nacuse = 0;
         this.contienenombre = 0;
-        DefaultListModel listaJList = new DefaultListModel();
+        this.listaJList = new DefaultListModel();
         listaJList.addElement("Ningun paquete recibido");
         this.jlPaquetes.setModel(listaJList);
         this.jcbInterfaces.removeAllItems();
@@ -64,11 +63,16 @@ public class GenerarTramas extends javax.swing.JFrame {
         jlCadenaIngresada = new javax.swing.JLabel();
         jtfCadena = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Generar tramas");
+        setAlwaysOnTop(true);
 
+        jlInstrucciones.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         jlInstrucciones.setText("Selecciona una interfaz para enviar las tramas");
 
+        jcbInterfaces.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         jcbInterfaces.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jlPaquetes.setModel(new javax.swing.AbstractListModel<String>() {
@@ -78,6 +82,7 @@ public class GenerarTramas extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jlPaquetes);
 
+        jbRegresar.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         jbRegresar.setText("Regresar");
         jbRegresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -85,6 +90,7 @@ public class GenerarTramas extends javax.swing.JFrame {
             }
         });
 
+        jbEnviar.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         jbEnviar.setText("Enviar cadena");
         jbEnviar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -92,40 +98,43 @@ public class GenerarTramas extends javax.swing.JFrame {
             }
         });
 
+        jlCadenaIngresada.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         jlCadenaIngresada.setText("Ingresa una cadena a ser enviada ");
 
+        jtfCadena.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         jtfCadena.setText("Maximo 1024 caracteres");
 
-        jLabel1.setText("Esta etiqueta sera sustituida pr una imagen con la forma de la trama");
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Trama copia-iloveimg-resized (1).png"))); // NOI18N
+        jLabel1.setToolTipText("");
+        jLabel1.setPreferredSize(new java.awt.Dimension(977, 204));
+
+        jLabel2.setFont(new java.awt.Font("SansSerif", 1, 11)); // NOI18N
+        jLabel2.setText("En la imagen se representa el formato de las tramas generadas ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jbEnviar)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jbRegresar))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 509, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(77, 77, 77)
-                                .addComponent(jbEnviar))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jlInstrucciones)
-                                    .addComponent(jlCadenaIngresada))
-                                .addGap(38, 38, 38)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jcbInterfaces, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jtfCadena, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jbRegresar)
-                                .addGap(9, 9, 9))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addComponent(jLabel1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jlInstrucciones)
+                            .addComponent(jlCadenaIngresada))
+                        .addGap(38, 38, 38)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jcbInterfaces, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jtfCadena, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -134,19 +143,21 @@ public class GenerarTramas extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jlInstrucciones)
                     .addComponent(jcbInterfaces, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jlCadenaIngresada)
                     .addComponent(jtfCadena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jbEnviar)
-                .addGap(2, 2, 2)
-                .addComponent(jLabel1)
-                .addGap(2, 2, 2)
-                .addComponent(jbRegresar)
-                .addGap(14, 14, 14))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jbEnviar)
+                    .addComponent(jbRegresar))
+                .addGap(36, 36, 36)
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19))
         );
 
         pack();
@@ -370,52 +381,109 @@ public class GenerarTramas extends javax.swing.JFrame {
 
 			
         public void nextPacket(PcapPacket packet, String user) {
-
+            
+                                
+                                String paqueterecibido ="Paquete recibido el  "+new Date(packet.getCaptureHeader().timestampInMillis())
+                                        +" bytes capturados = "+packet.getCaptureHeader().caplen()
+                                        +" tamaño original "+packet.getCaptureHeader().wirelen()+" "+user;
+                                agregaValorLista(paqueterecibido, listaJList);
+                                
 				System.out.printf("Paquete recibido el %s bytes capturados=%-4d tam original=%-4d %s\n",
 				    new Date(packet.getCaptureHeader().timestampInMillis()),
 				    packet.getCaptureHeader().caplen(),  // Length actually captured
 				    packet.getCaptureHeader().wirelen(), // Original length
 				    user                                 // User supplied object
 				    );
+                                //String paqueterecibido = ""+ new Date(packet.getCaptureHeader().timestampInMillis());
                                 /******Desencapsulado********/
+                                String macDestino = "Dirección MAC destino: "; 
                                 System.out.println("MAC destino:");
                                 for(int i=0;i<6;i++){
+                                    macDestino = macDestino+" "+Integer.toHexString(packet.getUByte(i)).toUpperCase();
                                 System.out.printf("%02X ",packet.getUByte(i));
                                 }
+                                agregaValorLista(macDestino, listaJList);
                                 System.out.println("");
+                                
+                                String macOrigen = "Dirección MAC origen: ";
                                 System.out.println("MAC origen:");
                                 for(int i=6;i<12;i++){
+                                macOrigen = macOrigen+" "+Integer.toHexString(packet.getUByte(i)).toUpperCase();
                                 System.out.printf("%02X ",packet.getUByte(i));
                                 }
+                                agregaValorLista(macOrigen, listaJList);
                                 System.out.println("");
+                                String tipoaux = "Tipo: ";
                                 System.out.println("Tipo:");
                                 for(int i=12;i<14;i++){
+                                    tipoaux = tipoaux + " "+Integer.toHexString(packet.getUByte(i)).toUpperCase();
                                 System.out.printf("%02X ",packet.getUByte(i));
                                 }
                                 int tipo = (packet.getUByte(12)*256)+packet.getUByte(13);
                                 System.out.printf("Tipo= %d",tipo);
+                                tipoaux = tipoaux + " = "+tipo;
+                                agregaValorLista(tipoaux, listaJList);
+                                String version = "Versión: ";
                                 System.out.printf("\nVersion: %02X",packet.getUByte(14));
-                                System.out.printf("\nNombre del archivo: %02X",packet.getUByte(15));
+                                version = version + "" +packet.getUByte(14);
+                                agregaValorLista(version, listaJList);
+                                String nomarch = "Nombre de Archivo: ";
+                                System.out.printf("\nNombre de archivo: %02X",packet.getUByte(15));
+                                nomarch = nomarch +""+ packet.getUByte(15); 
+                                agregaValorLista(nomarch, listaJList);
+                                String numSec = "Número de secuencia: ";
                                 System.out.printf("\nNum. Secuencia: %02X",packet.getUByte(16));
+                                numSec = numSec +""+ packet.getUByte(16);
+                                agregaValorLista(numSec, listaJList);
+                                String numAcuse = "Número de acuse: ";
                                 System.out.printf("\nNum. Acuse : %02X",packet.getUByte(17));
+                                numAcuse = numAcuse +""+ Integer.toHexString(packet.getUByte(17));
+                                agregaValorLista(numAcuse, listaJList);
+                                String ipd = "Dirección IP destino: ";
+                                ipd = ipd +""+packet.getUByte(18);
+                                ipd = ipd +"."+packet.getUByte(19);
+                                ipd = ipd +"."+packet.getUByte(20);
+                                ipd = ipd +"."+packet.getUByte(21);
+                                agregaValorLista(ipd, listaJList);
+                                String ipo = "Dirección IP origen :";
+                                ipo = ipo +""+packet.getUByte(22);
+                                ipo = ipo +"."+packet.getUByte(23);
+                                ipo = ipo +"."+packet.getUByte(24);
+                                ipo = ipo +"."+packet.getUByte(25);
+                                agregaValorLista(ipo, listaJList);
 System.out.printf("\nIp destino: %d.%d.%d.%d",packet.getUByte(18),packet.getUByte(19),packet.getUByte(20),packet.getUByte(21));
 System.out.printf("\nIp origen: %d.%d.%d.%d",packet.getUByte(22),packet.getUByte(23),packet.getUByte(24),packet.getUByte(25));
                                 if(tipo==5633){ //0x1601
+                                    String mensajeneviado = "Mensaje enviado: ";
                                    System.out.println("\nMensaje enviado:");
                                    byte[]t = packet.getByteArray(26, 1024); //???????El segundo parametro es la cantidad de bytes que va a leer la funcion, no la posicion donde termina 
-                                   for(int k=0;k<t.length;k++)
+                                   for(int k=0;k<t.length;k++){
                                        System.out.printf("%02X ",t[k]);
-                                       String datos = new String(t);
-                                    System.out.println("\nEl mensaje es: "+datos);
-                                    System.out.println("Checksum:");
-                                //for(int i=12;i<14;i++){
+                                   }
+                                   String datos = new String(t);
+                                   mensajeneviado = mensajeneviado +datos;
+                                   agregaValorLista(mensajeneviado, listaJList);
+                                       
+                                String ch = "Checksum calculado: ";    
+                                System.out.println("\nEl mensaje es: "+datos);
+                                System.out.println("Checksum:");
+                                ch = ch +""+ Integer.toHexString(packet.getUByte(1050)).toUpperCase()+" "+ Integer.toHexString(packet.getUByte(1051)).toUpperCase();
+                                agregaValorLista(ch, listaJList);
                                 System.out.printf("%02X %02X",packet.getUByte(1050),packet.getUByte(1051));
-                                //}
+                                
+                                    //agregaValorLista("Trama generada: ", listaJList);
+                                    String tram = "";
                                 System.out.println("");
                                 for(int l=0;l<packet.size();l++){
+                                    tram += " "+Integer.toHexString(packet.getUByte(l)).toUpperCase();
                                 System.out.printf("%02X ",packet.getUByte(l));
-                                if(l%16==15)
-                                    System.out.println("");
+                                    if(l%16==15){
+                                        System.out.println("");
+                                        //agregaValorLista(tram, listaJList);
+                                        
+                                        //tram = "";
+                                    }
+                                
                                 }
 
                                 
@@ -432,9 +500,7 @@ System.out.printf("\nIp origen: %d.%d.%d.%d",packet.getUByte(22),packet.getUByte
             }
             else
             System.out.println("***Envie un paquete***");
-             try{
-            Thread.sleep(500);
-        }catch(InterruptedException e){}
+          
        
         pcap.loop(1, jpacketHandler, "");
         
@@ -449,8 +515,20 @@ System.out.printf("\nIp origen: %d.%d.%d.%d",packet.getUByte(22),packet.getUByte
         
     }
     
+    public void agregaValorLista(String cadena, DefaultListModel listaJList)
+    {
+        
+        listaJList.addElement(cadena);
+        this.jlPaquetes.setModel(listaJList);
+    }
+    public  void limpiarJList(DefaultListModel listaJList)
+    {
+        listaJList.removeAllElements();
+        this.jlPaquetes.setModel(listaJList);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jbEnviar;
     private javax.swing.JButton jbRegresar;
